@@ -1,0 +1,129 @@
+<%@page import="persistencia.DAOCliente"%>
+<%@page import="model.Cliente"%>
+<%@page contentType="text/html" pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <title> Alterar Cliente </title>
+        
+                <!-- Validação dos campos vazios -->
+        <script type="text/javascript" language="javascript"> 
+            function validarForm(){
+                var txtCPFjs = formu2.txtCPF.value;
+                var txtNomejs = formu2.txtNome.value;
+                var txtEmailjs = formu2.txtEmail.value;
+                var txtDataDeNascimentojs = formu2.txtDataDeNascimento.value;
+                var RadioButtonSexojs = formu2.RadioButtonSexo.value;
+                var SelectEstadoCiviljs = formu2.SelectEstadoCivil.value;
+                
+                if(txtCPFjs == ""){ //CPF
+                    alert('Preencha o campo CPF');
+                    formu2.txtCPF.focus();
+                    return false;
+                }
+                
+                if(txtNomejs == ""){ //Nome
+                    alert('Preencha o campo Nome');
+                    formu2.txtNome.focus();
+                    return false;
+                }
+                
+                if(txtEmailjs == ""){ //Email
+                    alert('Preencha o campo E-mail');
+                    formu2.txtEmail.focus();
+                    return false;
+                }
+                
+                if(txtDataDeNascimentojs == ""){ //DataDeNascimento
+                    alert('Preencha o campo Data de Nascimento');
+                    formu2.txtDataDeNascimento.focus();
+                    return false;
+                }
+                
+                if(RadioButtonSexojs == ""){ //Sexo
+                    alert('Preencha o campo Sexo');
+                    return false;
+                }
+                
+                if(SelectEstadoCiviljs == ""){ //EstadoCivil
+                    alert('Preencha o campo Estado Civil');
+                    return false;
+                }     
+            }
+        </script> 
+        
+    </head>
+    <body>
+        <h3> Alterar os dados de um cliente na base </h3>
+        
+        <%  //Recuperando as informações do cliente para apresentar na tela de alteração
+            
+            Cliente cliente = new Cliente();
+            DAOCliente dao = new DAOCliente();
+            cliente.setCPF(request.getParameter("CPF"));            
+            cliente = dao.consultarPeloCPF(cliente);
+        %>
+                
+        <form name="formu2" action="AlterarCliente" method="post">  
+            
+            Novo CPF: <input type="text" name="txtCPF" value="<%=cliente.getCPF()%>"/><br/><br/>
+            Novo Nome: <input type="text" name="txtNome" value="<%=cliente.getNome()%>"/><br/><br/>  
+            Novo E-mail: <input type="text" name="txtEmail" value="<%=cliente.getEmail()%>"/><br/><br/>
+            Nova Data de Nascimento: <input type="text" name="txtDataDeNascimento" value="<%=cliente.getDataDeNascimento()%>"/><br/><br/>
+            
+            <%
+                //Populando o check do "Sexo" do Cliente.
+                String checkMasculino;
+                String checkFeminino;
+                checkMasculino = null;
+                checkFeminino = null;
+                
+                switch(cliente.getSexo()){
+                    case "M":
+                        checkMasculino = "checked";
+                    break;
+                    
+                    case "F":
+                        checkFeminino = "checked";
+                    break;
+                    
+                    default:
+                    break;
+                };            
+            %>
+            
+            <label> Sexo </label><br/>
+            <input type="radio" name="RadioButtonSexo" value="M" <%=checkMasculino%>/> Masculino
+            <input type="radio" name="RadioButtonSexo" value="F" <%=checkFeminino%>/> Feminino <br/><br/>
+            
+            <%
+                //Populando o check do "Estado Civil" do Cliente.
+                //OBS: Faltou concluir - Não tive tempo. 
+            
+            %>
+            
+            <label> Estado Civil </label>
+            <select name="SelectEstadoCivil">
+                <option> Solteiro(a) </option>
+                <option> Casado(a) </option>
+                <option> Divorciado(a) </option>
+                <option> Viuvo(a) </option>
+            </select><br/><br/>
+            
+            <%                
+                //Populando o check "Ativo" do Cliente.
+                //OBS: Faltou concluir - Não tive tempo.
+            
+            %>
+            
+            <label> Ativo </label>
+            <input type="checkbox" name="checkAtivo" value="0" checked=""/><br/><br/>
+            
+            <input type="submit" onClick="return validarForm()" value="Alterar"/>          
+        </form>
+        
+        <br/><a  href="javascript:window.history.go(-1)"> Voltar </a>
+        
+    </body>
+</html>
